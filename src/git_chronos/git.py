@@ -22,7 +22,7 @@ def get_git_commits(author: str | None = None, limit: int = 10) -> list[Commit]:
                 '--pretty=format:%h\x09%an\x09%ad\x09%s', "--date=short"]
 
     if author:
-        cmd_args.append(f"author={author}")
+        cmd_args.append(f"--author={author}")
 
     try:
         commit_log = subprocess.run(
@@ -31,12 +31,16 @@ def get_git_commits(author: str | None = None, limit: int = 10) -> list[Commit]:
         print("Error: The current directory is not a Git repository.", file=sys.stderr)
         sys.exit(1)
 
+    if not commit_log.stdout:
+        return []
+
     commit_strings = commit_log.stdout.split("\n")
 
     commits = []
 
     for commit in commit_strings:
-        commits.append(process_commit_string(commit))
+        if commit:
+            commits.append(process_commit_string(commit))
 
     return commits
 

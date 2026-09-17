@@ -3,8 +3,6 @@ from .git import get_git_commits
 from collections import defaultdict
 from rich.console import Console
 
-console = Console(highlight=False)
-
 DATE_STRING_LENGTH = 12
 CONTRIBUTION_BAR_LENGTH = 18
 
@@ -70,7 +68,7 @@ def format_commits_to_tree(commits: list[Commit], colourized: bool = True) -> li
     return output
 
 
-def format_commits_to_contributions(commits: list[Commit]) -> dict[list[Commit]]:
+def format_commits_to_contributions(commits: list[Commit]) -> list[str]:
     output = ["Contributions:"]
 
     commits_grouped_by_author = group_commits_by(commits, "author")
@@ -98,6 +96,8 @@ if __name__ == '__main__':
     commits = get_git_commits()
     pretty_commits = format_commits_to_tree(commits, False)
     contriubtion_list = format_commits_to_contributions(commits)
+
+    console = Console()
 
     for commit in pretty_commits:
         console.print(commit)
